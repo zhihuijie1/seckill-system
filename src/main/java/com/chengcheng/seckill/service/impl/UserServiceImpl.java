@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
     @Autowired
     private UserMapper userMapper;
+
     /**
      * 登录功能
      */
@@ -56,13 +57,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         //生成cookieID
         String userTicket = UUID.uuid();
+        System.out.println("service  userTicket is   " + userTicket);
         //将cookie与对象对应起来，存入到session中
-        request.getSession().setAttribute(userTicket,user);
-        CookieUtil.setCookie(request,response,"userTicket",userTicket);
+        request.getSession().setAttribute(userTicket, user);
+
+        CookieUtil.setCookie(request, response, "userTicket", userTicket);
 
 
         //用户名与密码全部正确
         //将ticket返回，因为前端需要 -- document.cookie = "userTicket=" + data.object;
-        return Result.ok(userTicket);
+        return Result.ok();
     }
 }
