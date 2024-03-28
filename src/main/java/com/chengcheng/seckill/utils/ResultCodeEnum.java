@@ -38,7 +38,8 @@ public enum ResultCodeEnum {
     CODE_ERROR(223,"验证码错误!"),
     TOKEN_ERROR(224,"Token无效!"),
 
-    MOBILE_ERROR(225,"手机格式错误")
+    MOBILE_ERROR(225,"手机格式错误"),
+    BIND_ERROR(226,"参数校验异常")
     ;
 
     private Integer code;
