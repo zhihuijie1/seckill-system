@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
     //声明一个异常处理方法，用于处理Exception类型的异常。
     @ExceptionHandler(Exception.class)
     public Result ExceptionHandler(Exception e) {
-        if (e instanceof GlobalException) {
+        if (e instanceof GlobalException) { //处理手机号/密码错误异常
             GlobalException ex = (GlobalException) e;
             return Result.fail(ex.getResultCodeEnum());
         } else if (e instanceof BindException) {
@@ -23,5 +23,5 @@ public class GlobalExceptionHandler {
             return result;
         }
         return Result.fail(ResultCodeEnum.SERVICE_ERROR);
-    }
+    }   
 }

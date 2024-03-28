@@ -5,8 +5,11 @@ import com.chengcheng.seckill.pojo.User;
 import com.chengcheng.seckill.utils.Result;
 import com.chengcheng.seckill.vo.LoginVo;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 public interface IUserService extends IService<User> {
-    Result doLogin(LoginVo loginVo);
+    Result doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response);
 
 }

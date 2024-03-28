@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 @Controller
@@ -36,8 +38,8 @@ public class LoginController {
      */
     @RequestMapping("/doLogin")
     @ResponseBody
-    public Result doLogin(@Validated LoginVo loginVo) { //@Validated -- 会自动检查传入参数中信息是否正确
-        Result result = iUserService.doLogin(loginVo);
+    public Result doLogin(@Validated LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) { //@Validated -- 会自动检查传入参数中信息是否正确
+        Result result = iUserService.doLogin(loginVo,request,response);
         return result;
     }
 }

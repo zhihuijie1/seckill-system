@@ -335,6 +335,7 @@ public class Validator {
 >
 > SpringBoot全局异常处理方式主要两种使用 @ControllerAdvice 和 @ExceptionHandler 注解。
 > 使用 ErrorController类 来实现区别：
+>
 > 1. @ControllerAdvice 方式只能处理控制器抛出的异常。此时请求已经进入控制器中。
 > 2. ErrorController类 方式可以处理所有的异常，包括未进入控制器的错误，比如404,401等错误
 > 3. 如果应用中两者共同存在，则 @ControllerAdvice 方式处理控制器抛出的异常，
@@ -344,11 +345,67 @@ public class Validator {
 
 
 
+![](D:/%E4%BD%A0%E5%A5%BDJava/31-17116114555823.png)
+
+##### GlobalException
+
+```java
+package com.chengcheng.seckill.exception;
+
+import com.chengcheng.seckill.utils.ResultCodeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class GlobalException extends RuntimeException {
+    ResultCodeEnum resultCodeEnum;
+}
+```
+
+##### GlobalExceptionHandler
+
+```java
+package com.chengcheng.seckill.exception;
+
+import com.chengcheng.seckill.utils.Result;
+import com.chengcheng.seckill.utils.ResultCodeEnum;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+//声明一个全局异常处理器类，用于处理Controller层抛出的异常。
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    //声明一个异常处理方法，用于处理Exception类型的异常。
+    @ExceptionHandler(Exception.class)  
+    public Result ExceptionHandler(Exception e) {
+        if (e instanceof GlobalException) { //处理手机号/密码错误异常
+            GlobalException ex = (GlobalException) e;
+            return Result.fail(ex.getResultCodeEnum());
+        } else if (e instanceof BindException) {//参数校验时会向控制台抛BindException异常
+            BindException ex = (BindException) e;
+            //这一步主要拿到error code
+            Result result = Result.fail(ResultCodeEnum.BIND_ERROR);
+            //getBindingResult().getAllErrors().get(0) 因为只有一个error所以get(0)即可
+            result.setMessage("参数校验异常：" +
+                    ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+            return result;
+        }
+        return Result.fail(ResultCodeEnum.SERVICE_ERROR);
+    }
+}
+```
 
 
 
+```
+Resolved [org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
 
-
+Field error in object 'loginVo' on field 'mobile': rejected value [111111111]; codes [IsMobile.loginVo.mobile,IsMobile.mobile,IsMobile.java.lang.String,IsMobile]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginVo.mobile,mobile]; arguments []; default message [mobile],true]; default message [手机号码格式错误]]
+```
 
 
 
