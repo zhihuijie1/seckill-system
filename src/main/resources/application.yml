@@ -27,24 +27,35 @@ spring:
       #建立数据库连接是一个开销较大的操作，包括网络通信、身份验证等步骤。连接池通过重用现有的连接，避免了这些开销，从而加快了操作的执行速度。
       #举例：假设一个网站，每次用户请求都需要查询数据库。如果不使用连接池，那么每个请求都需要重新建立连接，
       #导致响应速度变慢，用户体验下降。使用连接池后，可以快速从池中获取已经建立的连接，提高了请求的处理速度。
+  redis:
+    timeout: 10000ms
+    host: 192.168.136.138
+    database: 0
+    port: 6379
+    lettuce:
+      pool:
+        max-wait: 10000ms
+        max-idle: 200
+        min-idle: 5
+        max-active: 1024
 
 #mybatis-plus
 mybatis-plus:
-    mapper-locations: classpath*:/mapper/*Mapper.xml
-    type-aliases-package: com.chengcheng.seckill.pojo
-  #指定mapper映射文件的位置
-  #MyBatis-Plus将会扫描项目的所有classpath路径下的mapper目录，
-  #加载所有以Mapper.xml结尾的文件。这些XML文件中定义了数据库操作的SQL语句和映射规则，是实现数据访问逻辑的关键。
-  # mapper-locations: classpath*:/mapper/**/*.xml
-  #MyBatis-Plus会自动扫描这个包下的类，并注册为别名。这样在Mapper XML文件中就可以使用类名而不是完整的包名来引用这些类了，
-  #大大提高了配置文件的可读性和简洁性。例如，在上述配置中，com.chengcheng.seckill.pojo包下的所有类都会被自动注册为别名，
-  #如果这个包下有一个User类，那么在Mapper XML中就可以直接使用User来引用这个类，而不需要写成com.chengcheng.seckill.pojo.User。
-  # type-aliases-package: com.chengcheng.seckill.pojo
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  type-aliases-package: com.chengcheng.seckill.pojo
+    #指定mapper映射文件的位置
+    #MyBatis-Plus将会扫描项目的所有classpath路径下的mapper目录，
+    #加载所有以Mapper.xml结尾的文件。这些XML文件中定义了数据库操作的SQL语句和映射规则，是实现数据访问逻辑的关键。
+    # mapper-locations: classpath*:/mapper/**/*.xml
+    #MyBatis-Plus会自动扫描这个包下的类，并注册为别名。这样在Mapper XML文件中就可以使用类名而不是完整的包名来引用这些类了，
+    #大大提高了配置文件的可读性和简洁性。例如，在上述配置中，com.chengcheng.seckill.pojo包下的所有类都会被自动注册为别名，
+    #如果这个包下有一个User类，那么在Mapper XML中就可以直接使用User来引用这个类，而不需要写成com.chengcheng.seckill.pojo.User。
+    # type-aliases-package: com.chengcheng.seckill.pojo
 
-  # mybatis SQL打印
+    # mybatis SQL打印
 
-      #com.chengcheng.sekill.mapper指定的是一个包路径，而debug是日志级别。
-      #这意味着，所有com.chengcheng.sekill.mapper包下（及其子包）的类在运行时产生的日志，
-      #如果它们的级别是debug或更高级别（如error），这些日志信息将被输出。
+    #com.chengcheng.sekill.mapper指定的是一个包路径，而debug是日志级别。
+    #这意味着，所有com.chengcheng.sekill.mapper包下（及其子包）的类在运行时产生的日志，
+    #如果它们的级别是debug或更高级别（如error），这些日志信息将被输出。
 
-      #classpath:/mappers/*.xml
+  #classpath:/mappers/*.xml

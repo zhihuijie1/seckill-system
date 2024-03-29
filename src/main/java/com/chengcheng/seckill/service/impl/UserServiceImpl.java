@@ -48,22 +48,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         System.out.println("test");
         if (user == null) {
             throw new GlobalException(ResultCodeEnum.LOGIN_ERROR);
-            //return Result.fail(ResultCodeEnum.LOGIN_ERROR);
         }
         //有当前的用户。然后进行密码校对
         if (!MD5.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
             throw new GlobalException(ResultCodeEnum.LOGIN_ERROR);
-            //return Result.fail(ResultCodeEnum.LOGIN_ERROR);
         }
         //生成cookieID
         String userTicket = UUID.uuid();
         System.out.println("service  userTicket is   " + userTicket);
         //将cookie与对象对应起来，存入到session中
         request.getSession().setAttribute(userTicket, user);
-
         CookieUtil.setCookie(request, response, "userTicket", userTicket);
-
-
         //用户名与密码全部正确
         //将ticket返回，因为前端需要 -- document.cookie = "userTicket=" + data.object;
         return Result.ok();

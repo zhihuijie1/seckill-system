@@ -409,6 +409,79 @@ Field error in object 'loginVo' on field 'mobile': rejected value [111111111]; c
 
 
 
+
+
+
+
+
+
+## 五：Redis实现分布式Session
+
+### 方法一：使用SpringSession实现
+
+##### 1：添加依赖
+
+```xml
+<!-- spring data redis 依赖 -->
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<!-- commons-pool2 对象池依赖 -->
+<dependency>
+<groupId>org.apache.commons</groupId>
+<artifactId>commons-pool2</artifactId>
+</dependency>
+<!-- spring-session 依赖 -->
+<dependency>
+<groupId>org.springframework.session</groupId>
+<artifactId>spring-session-data-redis</artifactId>
+</dependency>
+```
+
+##### 2：配置redis
+
+```yml
+spring:
+redis:
+  #超时时间
+ timeout: 10000ms
+  #服务器地址
+ host: 192.168.10.100
+  #服务器端口
+ port: 6379
+  #数据库
+ database: 0
+  #密码
+ password: root
+ lettuce:
+  pool:
+    #最大连接数，默认8
+    max-active: 1024
+    #最大连接阻塞等待时间，默认-1
+    max-wait: 10000ms
+    #最大空闲连接
+    max-idle: 200
+    #最小空闲连接
+   min-idle: 5
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 问题集
 
 ### 1 - MD5加密原理

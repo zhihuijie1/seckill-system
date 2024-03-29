@@ -19,18 +19,13 @@ public class GoodsController {
     @GetMapping("/toList")
     public String toList(HttpSession session, Model model, @CookieValue("userTicket") String userTicket) {
         if (StringUtils.isEmpty(userTicket)) {
-            System.out.println("userTicket is null");
             return "login";
         }
         User user = (User) session.getAttribute(userTicket);
-        System.out.println("userTicket is   " + userTicket);
         if (user == null) {
-            System.out.println("user is null");
             return "login";
         }
-        //user是合法的
         model.addAttribute("user", user);
-        System.out.println("finish");
         return "goodsList";
     }
 }
