@@ -25,7 +25,6 @@ public class GoodsController {
      */
     @GetMapping("/toList")
     public String toList(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue("userTicket") String ticket) {
-        System.out.println(1);
         if (StringUtils.isEmpty(ticket)) {
             return "login";
         }
@@ -36,7 +35,7 @@ public class GoodsController {
         if (user == null) {
             return "login";
         }
-        System.out.println(user.getNickname() + "  " + user.getPassword() + "  " + user.getLoginCount());
+        System.out.println("3.5");
         model.addAttribute("user", user);
         System.out.println(4);
         return "goodsList";
