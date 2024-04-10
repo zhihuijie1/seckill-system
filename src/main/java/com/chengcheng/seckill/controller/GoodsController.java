@@ -20,24 +20,11 @@ public class GoodsController {
     @Autowired
     private IUserService userService;
 
-    /**
-     * 跳转功能
-     */
-    @GetMapping("/toList")
-    public String toList(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue("userTicket") String ticket) {
-        if (StringUtils.isEmpty(ticket)) {
-            return "login";
-        }
-        //User user = (User) session.getAttribute(userTicket);
-        System.out.println("1 my ticket is " + ticket);
-        User user = userService.getByUserTicket(request, response, ticket);
-        System.out.println(3);
-        if (user == null) {
-            return "login";
-        }
-        System.out.println("3.5");
+    //--- 跳转功能 ---
+    @RequestMapping("/toList")
+    public String toList(Model model, User user) {
+        //关于user的判断会放在MVC层处理
         model.addAttribute("user", user);
-        System.out.println(4);
         return "goodsList";
     }
 }

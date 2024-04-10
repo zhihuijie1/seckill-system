@@ -34,18 +34,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //先把手机号码，密码拿出来
         String mobile = loginVo.getMobile();
         String password = loginVo.getPassword();
-        //-----------------------------  begin -----------------------------
-        //对手机号码的校验可以写一个自己的注解，这样有更好的通用性。
-        //判空
-        /*if(StringUtils.isEmpty(mobile) || StringUtils.isEmpty(password)) {
-            return Result.fail(ResultCodeEnum.LOGIN_ERROR);
-        }
-        //判断号码格式对不对
-        if(!Validator.isMobile(mobile)) {
-            return Result.fail(ResultCodeEnum.MOBILE_ERROR);
-        }*/
-        //-----------------------------  end -----------------------------
-
         //根据手机号码从数据库取出对应的用户
         User user = userMapper.selectById(mobile);
         System.out.println("test");
@@ -58,8 +46,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         //生成cookieID
         String userTicket = UUID.uuid();
-        //将cookie与对象对应起来，存入到session中
-        //request.getSession().setAttribute(userTicket, user);
         //将用户信息放到redis中
         redisTemplate.opsForValue().set("user:" + userTicket, user);
         User usr = (User) (redisTemplate.opsForValue().get("user:" + userTicket));
