@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @TableName("t_order")
 public class Order implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private long id;
 
     /**
      * 用户ID

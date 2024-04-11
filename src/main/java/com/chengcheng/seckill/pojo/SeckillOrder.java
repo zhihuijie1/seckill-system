@@ -19,7 +19,7 @@ import java.io.Serializable;
 @TableName("t_seckill_order")
 public class SeckillOrder implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private long id;
 
     /**
      * 用户ID

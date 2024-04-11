@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @TableName("t_seckill_goods")
 public class SeckillGoods implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private long id;
 
     /**
      * 商品ID
