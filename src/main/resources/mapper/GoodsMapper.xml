@@ -3,3 +3,5 @@
 <mapper namespace="com.chengcheng.seckill.mapper.GoodsMapper">
 
 </mapper>
+
+
