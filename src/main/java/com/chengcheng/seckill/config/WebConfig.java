@@ -10,9 +10,10 @@ import java.util.List;
 
 @Configuration//配置类
 @EnableWebMvc//开启MVC特性
-public class WebConfig implements WebMvcConfigurer{//WebMvcConfigurer这个接口提供了一些方法，可以用来配置Spring MVC的一些行为。
+public class WebConfig implements WebMvcConfigurer {//WebMvcConfigurer这个接口提供了一些方法，可以用来配置Spring MVC的一些行为。
     @Autowired
     UserArgumentResolver userArgumentResolver;
+
     @Override
     //添加自定义的方法参数解析器到Spring MVC中
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

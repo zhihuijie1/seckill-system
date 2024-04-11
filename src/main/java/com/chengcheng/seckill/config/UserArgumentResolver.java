@@ -11,6 +11,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,18 +33,16 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     //resolveArgument方法 -- 真正处理指定参数的方法
-        public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest webRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-            //获取HttpServletRequest与HttpServletResponse
-            HttpServletRequest request =
-                    webRequest.getNativeRequest(HttpServletRequest.class);
-            HttpServletResponse response =
-                    webRequest.getNativeResponse(HttpServletResponse.class);
-            //获取cookieID
-            String ticket = CookieUtil.getCookieValue(request, "userTicket");
-            if (StringUtils.isEmpty(ticket)) {
-                return null;
-            }
-            //根据cookieID获取User对象
-            return userService.getByUserTicket(request, response,ticket);
+    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest webRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
+        //获取HttpServletRequest与HttpServletResponse
+        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+        //获取cookieID
+        String ticket = CookieUtil.getCookieValue(request, "userTicket");
+        if (StringUtils.isEmpty(ticket)) {
+            return null;
         }
+        //根据cookieID获取User对象
+        return userService.getByUserTicket(request, response, ticket);
+    }
 }
