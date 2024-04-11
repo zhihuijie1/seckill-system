@@ -1,9 +1,10 @@
 package com.chengcheng.seckill.service.impl;
 
-import com.baomidou.ant.seckill.entity.SeckillGoods;
-import com.baomidou.ant.seckill.mapper.SeckillGoodsMapper;
-import com.baomidou.ant.seckill.service.ISeckillGoodsService;
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chengcheng.seckill.mapper.SeckillGoodsMapper;
+import com.chengcheng.seckill.pojo.SeckillGoods;
+import com.chengcheng.seckill.service.ISeckillGoodsService;
 import org.springframework.stereotype.Service;
 
 /**
