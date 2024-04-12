@@ -29,4 +29,5 @@ public class WebConfig implements WebMvcConfigurer {//WebMvcConfigurer这个接�
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
+
 }

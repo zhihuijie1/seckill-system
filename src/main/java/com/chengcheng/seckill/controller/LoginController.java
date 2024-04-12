@@ -37,5 +37,6 @@ public class LoginController {
     public Result doLogin(@Validated LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) { //@Validated -- 会自动检查传入参数中信息是否正确
         Result result = iUserService.doLogin(loginVo, request, response);
         return result;
+
     }
 }

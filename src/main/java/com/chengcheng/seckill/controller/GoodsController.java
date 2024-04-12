@@ -21,6 +21,7 @@ public class GoodsController {
         model.addAttribute("goodsList", goodsService.findGoodsVo());
         //在前端页面中就可以通过 ${goodsList} 的方式来获取并显示商品列表的信息
         return "goodsList";
+
     }
 }
 
