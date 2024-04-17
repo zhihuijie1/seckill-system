@@ -30,9 +30,9 @@ public class GoodsController {
     }
 
     @RequestMapping("/toDetail/{goodsId}")
-    public String toDetail(Model model, User user, @PathVariable Long GoodsId) {
+    public String toDetail(Model model, User user, @PathVariable Long goodsId) {
         model.addAttribute("user", user);
-        GoodsVo goods = goodsService.findGoodVoByGoodsId(GoodsId);
+        GoodsVo goods = goodsService.findGoodVoByGoodsId(goodsId);
         model.addAttribute("goods", goods);
         Date startDate = goods.getStartDate();
         Date endDate = goods.getEndDate();

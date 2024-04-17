@@ -21,8 +21,7 @@
              t_seckill_goods AS sg ON g.id = sg.goods_id;
 
     </select>
-    <select id="findGoodVoByGoodsId" resultType="com.chengcheng.seckill.vo.GoodsVo"
-            parameterType="java.lang.Long">
+    <select id="findGoodVoByGoodsId" resultType="com.chengcheng.seckill.vo.GoodsVo">
         SELECT g.id,
                g.goods_name,
                g.goods_title,
@@ -35,9 +34,8 @@
                sg.start_date,
                sg.end_date
         FROM t_goods AS g
-                 LEFT JOIN
-             t_seckill_goods AS sg ON g.id = sg.goods_id;
-        WHERE g.id = #{GoodsId}
+                 LEFT JOIN t_seckill_goods AS sg ON g.id = sg.goods_id
+        WHERE g.id = #{goodsId}
     </select>
 </mapper>
 
