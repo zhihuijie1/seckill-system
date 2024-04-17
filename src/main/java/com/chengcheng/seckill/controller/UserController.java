@@ -15,5 +15,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/seckill/user")
 public class UserController {
-
 }
