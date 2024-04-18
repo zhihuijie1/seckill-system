@@ -1,5 +1,6 @@
 package com.chengcheng.seckill.utils;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import lombok.Getter;
 /**
  * 响应结果类型码枚举
@@ -39,7 +40,9 @@ public enum ResultCodeEnum {
     TOKEN_ERROR(224,"Token无效!"),
 
     MOBILE_ERROR(225,"手机格式错误"),
-    BIND_ERROR(226,"参数校验异常")
+    BIND_ERROR(226,"参数校验异常"),
+    EMPTY_STOCK(227,"库存为空"),
+    REPEATE_ERROR(228,"秒杀仅限购一件")
     ;
 
     private Integer code;

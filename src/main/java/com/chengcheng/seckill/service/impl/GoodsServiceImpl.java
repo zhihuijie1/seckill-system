@@ -7,6 +7,8 @@ import com.chengcheng.seckill.service.IGoodsService;
 import com.chengcheng.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -27,11 +29,13 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
      * @return List<GoodsVo>
      */
     @Override
+    @Transactional
     public List<GoodsVo> findGoodsVo() {
         return goodsMapper.findGoodsVo();
     }
 
     @Override
+    @Transactional
     public GoodsVo findGoodVoByGoodsId(Long goodsId) {
         System.out.println("---------------------- 3");
         return goodsMapper.findGoodVoByGoodsId(goodsId);

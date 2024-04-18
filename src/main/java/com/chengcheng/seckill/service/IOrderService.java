@@ -3,6 +3,8 @@ package com.chengcheng.seckill.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chengcheng.seckill.pojo.Order;
+import com.chengcheng.seckill.pojo.User;
+import com.chengcheng.seckill.vo.GoodsVo;
 
 /**
  * <p>
@@ -14,4 +16,5 @@ import com.chengcheng.seckill.pojo.Order;
  */
 public interface IOrderService extends IService<Order> {
 
+    Order seckill(User user, GoodsVo goods);
 }
