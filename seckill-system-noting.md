@@ -679,9 +679,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //秒杀商品表减库存
         SeckillGoods seckillGoods = seckillGoodsService.getOne(new
                 QueryWrapper<SeckillGoods>().eq("goods_id",
-                goods.getId()));
-        seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
-        seckillGoodsService.updateById(seckillGoods);
+                goods.getId()));//先把当前的秒杀商品给提出来
+        seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);//库存-1
+        seckillGoodsService.updateById(seckillGoods);//再将其
         //生成订单
         Order order = new Order();
         order.setUserId(user.getId());
@@ -705,9 +705,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 }
 ```
 
+public Order seckill(User user, GoodsVo goods) {
 
+这一层传入的参数是：User  GoodVo  即当前的用户对当前的商品进行秒杀。
 
-
+所以这层主要处理的问题是：当前商品的秒杀商品数量-1，然后生秒杀订单 并 返回秒杀订单给前端
 
 
 
@@ -737,7 +739,7 @@ userService .removeById();
 userService .removeByIds();
 //修改
 userService .update();
-userMapper.updateById(实体类);
+userMapper.updateById(实体类);//根据实体类的ID修改实体类
 //新增
 userService .save();
 userMapper.insert(实体类);
