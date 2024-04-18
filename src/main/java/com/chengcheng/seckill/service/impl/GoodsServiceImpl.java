@@ -37,7 +37,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     @Transactional
     public GoodsVo findGoodVoByGoodsId(Long goodsId) {
-        System.out.println("---------------------- 3");
         return goodsMapper.findGoodVoByGoodsId(goodsId);
     }
 }

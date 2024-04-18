@@ -41,11 +41,12 @@ public class SeckillController {
                 QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq(
                 "goods_id",
                 goodsId));
-        if (seckillOrder != null) {
-            model.addAttribute("errmsg", ResultCodeEnum.REPEATE_ERROR.getMessage());
+        if (seckillOrder != null) {// 说明之前已经抢购过了
+            model.addAttribute("errorMessage", ResultCodeEnum.REPEATE_ERROR.getMessage());
             return "seckillFail";
         }
-        Order order = orderService.seckill(user, goods);
+        //有库存且第一次抢购
+        Order order = orderService.seckill(user, goods);//进行秒杀的逻辑处理 哪个用户对哪个商品进行秒杀，返回一个秒杀订单
         model.addAttribute("order", order);
         model.addAttribute("goods", goods);
         return "orderDetail";

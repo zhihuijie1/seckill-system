@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -66,7 +67,7 @@ public class Order implements Serializable {
     /**
      * 订单的创建时间
      */
-    private LocalDateTime createDate;
+    private Date createDate;
 
     /**
      * 支付时间

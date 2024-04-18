@@ -519,6 +519,66 @@ public class RedisConfig {
 
 ### 1 -- SeckillController
 
+
+
+#### 补充知识 1：springMVC参数绑定机制
+
+> ```java
+> public String doSeckill(Model model, User user, Long goodsId) {}
+> ```
+>
+> Model是springMVC中的一个类，主要的功能是在controller中向前端传递数据
+> User表示当前参与秒杀的对象
+> goodsId是秒杀的商品
+> 这些参数会通过springMVC的参数绑定机制，将请求中的参数信息自动绑定到controller层的方法上
+>
+> 
+>
+> **springMVC参数绑定机制：**
+>
+> Spring MVC 的参数绑定机制是将前端发来的请求中的数据自动绑定到controller层方法的参数上。。这个过程通常是自动完成的，Spring MVC 会根据方法参数的类型和名称，尝试从请求中提取对应的数据，并将其转换为正确的类型，然后传递给方法。
+>
+> **绑定机制的详细步骤**
+>
+> 1. **客户端发送请求**：用户在浏览器中输入URL或者通过页面上的表单提交请求到服务器端。
+> 2. **DispatcherServlet 拦截请求**：当请求到达服务器端时，Spring MVC 的 DispatcherServlet 拦截并处理这个请求。
+> 3. **HandlerMapping 定位处理器**：DispatcherServlet 调用 HandlerMapping 将请求映射到对应的处理器(Controller)上。
+> 4. **确定方法参数**：HandlerMapping 确定了要调用的控制器方法后，会分析方法的参数列表。
+> 5. **参数解析器解析参数**：Spring MVC 使用参数解析器(ParameterResolver)来解析方法的参数。参数解析器会检查方法的参数类型，并根据请求中的数据来填充这些参数。
+> 6. **参数绑定**：一旦参数解析器确定了参数类型，它会从请求中提取数据并尝试将其转换为正确的类型。***如果参数的名称和请求中的参数名匹配，那么参数绑定就会成功。***
+> 7. **调用控制器方法**：一旦所有参数都绑定成功，DispatcherServlet 就会调用控制器方法，并将绑定好的参数传递给方法。
+> 8. **执行业务逻辑**：控制器方法执行业务逻辑，可能调用服务层或者其他组件来处理请求。
+> 9. **返回视图或数据**：控制器方法执行完成后，通常会返回一个视图名称或者数据给客户端。
+> 10. **视图解析**：DispatcherServlet 根据控制器方法返回的视图名称，使用视图解析器(ViewResolver)来解析视图并生成最终的响应内容。
+> 11. **响应客户端**：DispatcherServlet 将生成的响应内容返回给客户端。
+
+
+
+---------------
+
+
+
+#### 补充知识 2：IService中的封装方法 QueryWrapper中的封装方法
+
+> ```java
+> SeckillOrder seckillOrder = seckillOrderService.getOne(new
+>                 QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq(
+>                 "goods_id",
+>                 goodsId));
+> ```
+>
+> seckillOrderService实现了IService接口，其中封装了大量的service层的操作，
+>
+> seckillOrderService.getOne( ) ：IService中的方法，用于从数据库中获取满足条件的单个记录。
+>
+> new QueryWrapper<SeckillOrder>() ：创建一个查询条件的包装器，用于构建数据库的查询条件。
+>
+> . eq("user_id",  user.getId( ) ) .eq("goods_id", goodsId));  在查询条件包装器中添加一个等于条件（.eq（））。
+>
+> 即要求查询的结果中用户ID（user_id）与某个当前用户的ID相等，商品id与当前的商品id相等。
+
+
+
 ```java
 package com.chengcheng.seckill.controller;
 
@@ -563,10 +623,11 @@ public class SeckillController {
                 QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq(
                 "goods_id",
                 goodsId));
-        if (seckillOrder != null) {
-            model.addAttribute("errmsg", ResultCodeEnum.REPEATE_ERROR.getMessage());
+        if (seckillOrder != null) {// 说明之前已经抢购过了
+            model.addAttribute("errorMessage", ResultCodeEnum.REPEATE_ERROR.getMessage());
             return "seckillFail";
         }
+        //进行秒杀的逻辑处理 哪个用户对哪个商品进行秒杀，返回一个秒杀订单
         Order order = orderService.seckill(user, goods);
         model.addAttribute("order", order);
         model.addAttribute("goods", goods);
@@ -575,23 +636,74 @@ public class SeckillController {
 }
 ```
 
-秒杀的controller层主要负责的功能是：1：判断当前要秒杀的商品是否有库存
+秒杀的controller层主要负责的功能是：1：判断当前要秒杀的商品是否有库存  2：一个用户只能限购秒杀一件当前商品
 
 
 
+### 2 -- OrderServiceImpl
 
+```java
+package com.chengcheng.seckill.service.impl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chengcheng.seckill.mapper.OrderMapper;
+import com.chengcheng.seckill.pojo.Order;
+import com.chengcheng.seckill.pojo.SeckillGoods;
+import com.chengcheng.seckill.pojo.SeckillOrder;
+import com.chengcheng.seckill.pojo.User;
+import com.chengcheng.seckill.service.IGoodsService;
+import com.chengcheng.seckill.service.IOrderService;
+import com.chengcheng.seckill.service.ISeckillGoodsService;
+import com.chengcheng.seckill.service.ISeckillOrderService;
+import com.chengcheng.seckill.vo.GoodsVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 
+@Service
+public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements IOrderService {
+    @Autowired
+    private ISeckillGoodsService seckillGoodsService;
+    @Autowired
+    private IGoodsService goodsService;
+    @Autowired
+    private OrderMapper orderMapper;
+    @Autowired
+    private ISeckillOrderService seckillOrderService;
 
-
-
-
-
-
-
-
-
-
+    @Override
+    @Transactional
+    public Order seckill(User user, GoodsVo goods) {
+        //秒杀商品表减库存
+        SeckillGoods seckillGoods = seckillGoodsService.getOne(new
+                QueryWrapper<SeckillGoods>().eq("goods_id",
+                goods.getId()));
+        seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
+        seckillGoodsService.updateById(seckillGoods);
+        //生成订单
+        Order order = new Order();
+        order.setUserId(user.getId());
+        order.setGoodsId(goods.getId());
+        order.setDeliveryAddrId(0L);
+        order.setGoodsName(goods.getGoodsName());
+        order.setGoodsCount(1);
+        order.setGoodsPrice(seckillGoods.getSeckillPrice());
+        order.setOrderChannel(1);
+        order.setStatus(0);
+        order.setCreateDate(new Date());
+        orderMapper.insert(order);
+        //生成秒杀订单
+        SeckillOrder seckillOrder = new SeckillOrder();
+        seckillOrder.setOrderId(order.getId());
+        seckillOrder.setUserId(user.getId());
+        seckillOrder.setGoodsId(goods.getId());
+        seckillOrderService.save(seckillOrder);
+        return order;
+    }
+}
+```
 
 
 
@@ -606,6 +718,38 @@ public class SeckillController {
 ### 1 - MD5加密原理
 
 ### 2 - 正则表达式
+
+### 3 - mybatisplus 中 IService中常用的方法
+
+```java
+ //查询所有
+userService .list();
+//根据查询条件查询一个返回实体类对象
+userService.getOne(lambdaQueryWrapper);
+//分页查询所有
+userService.page(pageInfo,lambdaQueryWrapper);
+//查询数量
+userService .count();
+//根据ID查list集合
+userService .listByIds();
+//根据ID删除
+userService .removeById();
+userService .removeByIds();
+//修改
+userService .update();
+userMapper.updateById(实体类);
+//新增
+userService .save();
+userMapper.insert(实体类);
+//批量新增
+userService .saveBatch(集合);
+```
+
+
+
+
+
+
 
 
 
