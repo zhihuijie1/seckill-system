@@ -681,7 +681,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 QueryWrapper<SeckillGoods>().eq("goods_id",
                 goods.getId()));//先把当前的秒杀商品给提出来
         seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);//库存-1
-        seckillGoodsService.updateById(seckillGoods);//再将其
+        seckillGoodsService.updateById(seckillGoods);//再将其放回去
         //生成订单
         Order order = new Order();
         order.setUserId(user.getId());
@@ -745,6 +745,60 @@ userService .save();
 userMapper.insert(实体类);
 //批量新增
 userService .saveBatch(集合);
+```
+
+
+
+
+
+下载WinSCP
+
+```http
+https://www.cnblogs.com/luyj00436/p/14754371.html
+```
+
+通过WinSCP方式上传到云服务器
+
+```http
+https://www.cnblogs.com/luyj00436/p/14756346.html
+```
+
+![](D:/%E4%BD%A0%E5%A5%BDJava/32-17134964581471.png)
+
+主机名：远程IP地址
+
+
+
+Linux安装mysql的方法：
+
+```shell
+#下载MySQL安装文件：mysql-8.2.0-linux-glibc2.17-x86_64.tar.xz，确保它在你的主目录中。
+#解压缩MySQL安装文件： 
+tar -xvf mysql-8.2.0-linux-glibc2.17-x86_64.tar.xz
+
+#安装依赖项（如果需要）： 如果你的系统中缺少MySQL的依赖项，你可能需要安装它们。常见的依赖项包括libaio和libnuma等。
+sudo yum install libaio libnuma
+
+#创建MySQL数据目录： 在安装MySQL之前，确保创建一个用于存储MySQL数据的目录。你已经创建了一个目录mysql-8.2.0-linux-glibc2.17-x86_64，你可以在其中创建一个数据目录。
+mkdir /home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/data
+
+#初始化MySQL：
+/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/bin/mysqld --initialize-insecure --user=terrychen --basedir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64 --datadir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/data
+
+#启动MySQL服务： 使用以下命令启动MySQL服务：
+/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/bin/mysqld_safe --user=terrychen --basedir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64 --datadir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/data &
+
+#设置环境变量（可选）： 为了方便使用MySQL命令，你可以将MySQL的bin目录添加到系统的环境变量中。
+export PATH=$PATH:/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/bin
+
+#然后运行以下命令使修改生效：
+source ~/.bashrc
+
+#启动mysql
+./bin/mysql -u root
+
+#退出mysql
+输入：exit
 ```
 
 
