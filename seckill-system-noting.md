@@ -771,39 +771,131 @@ https://www.cnblogs.com/luyj00436/p/14756346.html
 
 Linux安装mysql的方法：
 
-```shell
-#下载MySQL安装文件：mysql-8.2.0-linux-glibc2.17-x86_64.tar.xz，确保它在你的主目录中。
-#解压缩MySQL安装文件： 
-tar -xvf mysql-8.2.0-linux-glibc2.17-x86_64.tar.xz
+```sql
+[terrychen@terrychen ~]$ ls
+dump.rdb  ku.pub                                       qemu         redis-6.2.1.tar.gz  公共  视频  文档  音乐
+ku        mysql80-community-release-el7-11.noarch.rpm  redis-6.2.1  redis-conf          模板  图片  下载  桌面
+[terrychen@terrychen ~]$ yum -y install mysql80-community-release-el7-11.noarch.rpm
+[terrychen@terrychen ~]$ sudo yum -y install mysql-community-server
+# 启动MySQL
+[terrychen@terrychen ~]$ systemctl start  mysqld
+# 查看MySQL服务状态
+[terrychen@terrychen ~]$ systemctl status mysqld
+# 登录mysql
+mysql -u root -p
+# 查看初始密码
+[terrychen@terrychen ~]$ sudo cat /var/log/mysqld.log
+[sudo] terrychen 的密码：
+2024-04-22T13:51:40.140544Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.0.36) initializing of server in progress as process 47323
+2024-04-22T13:51:40.149246Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2024-04-22T13:51:40.411269Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2024-04-22T13:51:41.321414Z 6 [Note] [MY-010454] [Server] A temporary password is generated for root@localhost: 26;eGjMp8waq
+2024-04-22T13:51:44.090738Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.36) starting as process 47370
+2024-04-22T13:51:44.119630Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2024-04-22T13:51:44.859383Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2024-04-22T13:51:45.372296Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2024-04-22T13:51:45.372374Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2024-04-22T13:51:45.410062Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+2024-04-22T13:51:45.410108Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.36'  socket: '/var/lib/mysql/mysql.sock'  port: 3306  MySQL Community Server - GPL.
+# 修改密码
+[terrychen@terrychen ~]$ alter user 'root'@'localhost' identified by '171612Cgj.';
+# 查看密码的配置状况
+mysql> show variables like 'validate_password%';
++-------------------------------------------------+--------+
+| Variable_name                                   | Value  |
++-------------------------------------------------+--------+
+| validate_password.changed_characters_percentage | 0      |
+| validate_password.check_user_name               | ON     |
+| validate_password.dictionary_file               |        |
+| validate_password.length                        | 8      |
+| validate_password.mixed_case_count              | 1      |
+| validate_password.number_count                  | 1      |
+| validate_password.policy                        | MEDIUM |
+| validate_password.special_char_count            | 1      |
++-------------------------------------------------+--------+
+8 rows in set (0.03 sec)
 
-#安装依赖项（如果需要）： 如果你的系统中缺少MySQL的依赖项，你可能需要安装它们。常见的依赖项包括libaio和libnuma等。
-sudo yum install libaio libnuma
+#创建一个支持远程连接的对象
+mysql> create user 'terry'@'%' identified by '171612Cgj.';
+Query OK, 0 rows affected (0.01 sec)
+#对这个对象授权
+mysql>  grant all on *.* to 'terry'@'%';
+Query OK, 0 rows affected (0.00 sec)
+#刷新一下，重新加载数据库的权限
+mysql> flush privileges;
+#关闭防火墙
+[terrychen@terrychen ~]$ sudo systemctl stop firewalld
+#查看mysql的端口号
+mysql> show global variables like 'port';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| port          | 3306  |
++---------------+-------+
+1 row in set (0.01 sec)
 
-#创建MySQL数据目录： 在安装MySQL之前，确保创建一个用于存储MySQL数据的目录。你已经创建了一个目录mysql-8.2.0-linux-glibc2.17-x86_64，你可以在其中创建一个数据目录。
-mkdir /home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/data
+mysql> 
 
-#初始化MySQL：
-/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/bin/mysqld --initialize-insecure --user=terrychen --basedir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64 --datadir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/data
-
-#启动MySQL服务： 使用以下命令启动MySQL服务：
-/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/bin/mysqld_safe --user=terrychen --basedir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64 --datadir=/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/data &
-
-#设置环境变量（可选）： 为了方便使用MySQL命令，你可以将MySQL的bin目录添加到系统的环境变量中。
-export PATH=$PATH:/home/terrychen/mysql-8.2.0-linux-glibc2.17-x86_64/bin
-
-#然后运行以下命令使修改生效：
-source ~/.bashrc
-
-#启动mysql
-./bin/mysql -u root
-
-#退出mysql
-输入：exit
 ```
 
 
 
+建立本地访问的用户
 
+```sql
+alter user 'root'@'localhost' identified by '171612cgj';
+```
+
+建立远程访问的用户
+
+```sql
+create user 'terrychen'@'%' identified by '171612cgj';
+```
+
+```sql
+grant all on *.* to 'terrychen'@'%';
+```
+
+
+
+启动mysql
+
+```sql
+systemctl start  mysqld
+```
+
+查看mysql的运行状态
+
+```sql
+systemctl status mysqld
+```
+
+打开mysql
+
+```sql
+mysql -u root -p
+```
+
+停止MySQL
+
+```sql
+sudo systemctl stop mysqld
+```
+
+
+
+> 注意此时  本机连接：root 171612Cgj.    远程联机：terry 171612Cgj.
+
+
+
+将项目进行打包
+
+```
+1：先进行clean操作
+2：然后再进行package操作
+3：将target中打包好的jar文件传入到linux中
+4：顺便将jmeter也chuan'jin'qu
+```
 
 
 

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
-
-
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
@@ -58,5 +56,3 @@ public class GoodsController {
         return "goodsDetail";
     }
 }
-
-

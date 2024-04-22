@@ -15,5 +15,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/seckill/seckill-goods")
 public class SeckillGoodsController {
-
+    
 }
