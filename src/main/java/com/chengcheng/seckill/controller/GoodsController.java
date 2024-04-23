@@ -71,6 +71,7 @@ public class GoodsController {
         if (!StringUtils.isEmpty(html)) {
             return html;
         }
+
         model.addAttribute("user", user);
         GoodsVo goods = goodsService.findGoodVoByGoodsId(goodsId);
         model.addAttribute("goods", goods);
