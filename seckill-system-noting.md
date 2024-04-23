@@ -1034,6 +1034,7 @@ public class GoodsController {
     //就手动创建这个页面，并将其存放入redis中，这样可以避免页面的重复渲染。
     
     @RequestMapping(value = "/toList", produces = "text/html;charset=utf-8")
+    ////produces用于指定响应返回的内容格式与编码格式，这样做是为了确保前端能够正确地解析响应内容。
     @ResponseBody
     public String toList(HttpServletRequest request, HttpServletResponse
             response, Model model, User user) {
@@ -1061,8 +1062,15 @@ public class GoodsController {
     }
 
 
-    @RequestMapping("/toDetail/{goodsId}")
-    public String toDetail(Model model, User user, @PathVariable Long goodsId) {
+        @RequestMapping(value = "/toDetail/{goodsId}", produces = "text/html;charset=utf-8")
+    //produces是RequestMapping一个注解，用于指定响应返回格式与字符编码格式，便于前端处理响应
+    @ResponseBody
+    public String toDetail(HttpServletRequest request, HttpServletResponse response, Model model, User user, @PathVariable Long goodsId) {
+        String html = (String) redisTemplate.opsForValue().get("goodsDetail" + goodsId);
+        if (!StringUtils.isEmpty(html)) {
+            return html;
+        }
+        //redis中没有goodsDetail这个页面
         model.addAttribute("user", user);
         GoodsVo goods = goodsService.findGoodVoByGoodsId(goodsId);
         model.addAttribute("goods", goods);
@@ -1087,7 +1095,13 @@ public class GoodsController {
         }
         model.addAttribute("secKillStatus", secKillStatus);
         model.addAttribute("remainSeconds", remainSeconds);
-        return "goodsDetail";
+        //如果为空，手动渲染，存入Redis并返回
+        WebContext context = new WebContext(request, response, request.getServletContext(), request.getLocale(), model.asMap());
+        html = thymeleafViewResolver.getTemplateEngine().process("goodsDetail", context);
+        if (!StringUtils.isEmpty(html)) {
+            redisTemplate.opsForValue().set("goodsDetail:" + goodsId, html, 60, TimeUnit.SECONDS);
+        }
+        return html;
     }
 }
 ```
