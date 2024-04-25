@@ -42,7 +42,9 @@ public enum ResultCodeEnum {
     MOBILE_ERROR(225,"手机格式错误"),
     BIND_ERROR(226,"参数校验异常"),
     EMPTY_STOCK(227,"库存为空"),
-    REPEATE_ERROR(228,"秒杀仅限购一件")
+    REPEATE_ERROR(228,"秒杀仅限购一件"),
+    MOBILE_NOT_EXIST(500213, "手机号码不存在"),
+    PASSWORD_UPDATE_FAIL(500214, "密码更新失败")
     ;
 
     private Integer code;

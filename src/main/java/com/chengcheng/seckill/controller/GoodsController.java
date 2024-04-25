@@ -1,12 +1,12 @@
 package com.chengcheng.seckill.controller;
 
-import com.chengcheng.seckill.pojo.Goods;
 import com.chengcheng.seckill.pojo.User;
 import com.chengcheng.seckill.service.IGoodsService;
+import com.chengcheng.seckill.utils.Result;
+import com.chengcheng.seckill.vo.DetailVo;
 import com.chengcheng.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,19 +62,11 @@ public class GoodsController {
         return html;
     }
 
-
-    @RequestMapping(value = "/toDetail/{goodsId}", produces = "text/html;charset=utf-8")
+    @RequestMapping("/toDetail/{goodsId}")
     //produces是RequestMapping一个注解，用于指定响应返回格式与字符编码格式，便于前端处理响应
     @ResponseBody
-    public String toDetail(HttpServletRequest request, HttpServletResponse response, Model model, User user, @PathVariable Long goodsId) {
-        String html = (String) redisTemplate.opsForValue().get("goodsDetail" + goodsId);
-        if (!StringUtils.isEmpty(html)) {
-            return html;
-        }
-        //redis中没有goodsDetail这个页面
-        model.addAttribute("user", user);
+    public Result toDetail(User user, @PathVariable Long goodsId) {
         GoodsVo goods = goodsService.findGoodVoByGoodsId(goodsId);
-        model.addAttribute("goods", goods);
         Date startDate = goods.getStartDate();
         Date endDate = goods.getEndDate();
         Date nowDate = new Date();
@@ -94,14 +86,12 @@ public class GoodsController {
             secKillStatus = 1;
             remainSeconds = 0;
         }
-        model.addAttribute("secKillStatus", secKillStatus);
-        model.addAttribute("remainSeconds", remainSeconds);
-        //如果为空，手动渲染，存入Redis并返回
-        WebContext context = new WebContext(request, response, request.getServletContext(), request.getLocale(), model.asMap());
-        html = thymeleafViewResolver.getTemplateEngine().process("goodsDetail", context);
-        if (!StringUtils.isEmpty(html)) {
-            redisTemplate.opsForValue().set("goodsDetail:" + goodsId, html, 60, TimeUnit.SECONDS);
-        }
-        return html;
+
+        DetailVo detailVo = new DetailVo();
+        detailVo.setGoodsVo(goods);
+        detailVo.setUser(user);
+        detailVo.setSecKillStatus(secKillStatus);
+        detailVo.setRemainSeconds(remainSeconds);
+        return Result.ok(detailVo);
     }
 }

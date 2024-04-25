@@ -1,6 +1,6 @@
 //展示loading
 function g_showLoading(){
-	var idx = layer.msg('处理中...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: '0px', time:100000}) ;  
+	var idx = layer.msg('处理中...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: '0px', time:100000}) ;
 	return idx;
 }
 //salt
@@ -22,11 +22,18 @@ Date.prototype.format = function (format) {
 		"s+": this.getSeconds(),
 	};
 	if (/(y+)/.test(format))
-		format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 -
+			RegExp.$1.length));
 	for (var i in args) {
 		var n = args[i];
 		if (new RegExp("(" + i + ")").test(format))
-			format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? n : ("00" + n).substr(("" + n).length));
+			format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? n : ("00" +
+				n).substr(("" + n).length));
 	}
 	return format;
 };
+
+
+
+
+

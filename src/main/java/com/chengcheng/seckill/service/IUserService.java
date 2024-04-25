@@ -14,4 +14,5 @@ public interface IUserService extends IService<User> {
 
     User getByUserTicket(HttpServletRequest request, HttpServletResponse response, String userTicket);
 
+    Result updatePassword(String userTicket,Long id,String password);
 }

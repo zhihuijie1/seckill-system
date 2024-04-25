@@ -68,4 +68,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         return user;
     }
+
+    /*更改密码*/
+    @Override
+    public Result updatePassword(String userTicket, Long id, String password) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new GlobalException(ResultCodeEnum.MOBILE_NOT_EXIST);
+        }
+        user.setPassword(MD5.inputPassToDBPass(password, user.getSalt()));
+        int result = userMapper.updateById(user);
+        if (1 == result) {
+            //删除Redis
+            redisTemplate.delete("user:" + userTicket);
+            return Result.ok();
+        }
+        return Result.fail(ResultCodeEnum.PASSWORD_UPDATE_FAIL);
+    }
 }
